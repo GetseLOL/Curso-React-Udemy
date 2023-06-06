@@ -23,14 +23,16 @@ export const JournalPages = () => {
             backgroundColor: "error.main",
             opacity: 0.9,
           },
-          position:"fixed",
+          position: "fixed",
           right: 50,
-          bottom: 50
+          bottom: 50,
         }}
       >
-        <AddOutlined sx={{
-          fontSize:30
-        }} />
+        <AddOutlined
+          sx={{
+            fontSize: 30,
+          }}
+        />
       </IconButton>
     </JournalLayout>
   );
