@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { getHeroesByPublisher } from "../helpers/getHeroesByPublisher";
 import { HeroCard } from "./HeroCard";
 
