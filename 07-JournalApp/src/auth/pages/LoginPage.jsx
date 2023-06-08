@@ -1,6 +1,6 @@
+import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
-import { Google } from "@mui/icons-material";
 import {
   Alert,
   Button,
@@ -9,35 +9,38 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useForm } from "../../hooks";
+import { Google } from "@mui/icons-material";
+
 import { AuthLayout } from "../layout/AuthLayout";
+
+import { useForm } from "../../hooks";
 import {
   startGoogleSignIn,
   startLoginWithEmailPassword,
 } from "../../store/auth";
-import { useMemo } from "react";
+
+const formData = {
+  email: "",
+  password: "",
+};
 
 export const LoginPage = () => {
   const { status, errorMessage } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
-
-  const { email, password, onInputChange, onResetForm } = useForm({
-    email: "jhonwick@gmail.com",
-    password: "daisy1234",
-  });
+  const { email, password, onInputChange } = useForm(formData);
 
   const isAuthenticating = useMemo(() => status === "checking", [status]);
 
   const onSubmit = (event) => {
     event.preventDefault();
-    // console.log({ email, password });
+
+    // console.log({ email, password })
     dispatch(startLoginWithEmailPassword({ email, password }));
-    onResetForm();
   };
 
   const onGoogleSignIn = () => {
-    console.log("onGoogleSignIn ");
+    console.log("onGoogleSignIn");
     dispatch(startGoogleSignIn());
   };
 
@@ -52,7 +55,7 @@ export const LoginPage = () => {
             <TextField
               label="Correo"
               type="email"
-              placeholder="correo@gmailcom"
+              placeholder="correo@google.com"
               fullWidth
               name="email"
               value={email}
@@ -92,9 +95,9 @@ export const LoginPage = () => {
             <Grid item xs={12} sm={6}>
               <Button
                 disabled={isAuthenticating}
-                onClick={onGoogleSignIn}
                 variant="contained"
                 fullWidth
+                onClick={onGoogleSignIn}
               >
                 <Google />
                 <Typography sx={{ ml: 1 }}>Google</Typography>
@@ -103,10 +106,8 @@ export const LoginPage = () => {
           </Grid>
 
           <Grid container direction="row" justifyContent="end">
-            <Typography sx={{ mr: 1 }}>¿No tienes cuenta?</Typography>
-
             <Link component={RouterLink} color="inherit" to="/auth/register">
-              Crear cuenta
+              Crear una cuenta
             </Link>
           </Grid>
         </Grid>

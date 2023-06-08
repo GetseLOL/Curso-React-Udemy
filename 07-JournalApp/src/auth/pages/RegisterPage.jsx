@@ -1,3 +1,5 @@
+import { useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 import {
   Alert,
@@ -9,28 +11,28 @@ import {
 } from "@mui/material";
 import { AuthLayout } from "../layout/AuthLayout";
 import { useForm } from "../../hooks";
-import { useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { startCreatingWithEmailPassword } from "../../store/auth";
+
+import { startCreatingUserWithEmailPassword } from "../../store/auth";
 
 const formData = {
-  displayName: "",
   email: "",
   password: "",
+  displayName: "",
 };
 
 const formValidations = {
-  email: [(value) => value.includes("@"), "El correo debe tener una @"],
+  email: [(value) => value.includes("@"), "El correo debe de tener una @"],
   password: [
     (value) => value.length >= 6,
-    "El password debe de ser mayor de 6 caracteres ",
+    "El password debe de tener más de 6 letras.",
   ],
-  displayName: [(value) => value.length >= 1, "El nombre es obligatorio"],
+  displayName: [(value) => value.length >= 1, "El nombre es obligatorio."],
 };
 
 export const RegisterPage = () => {
   const dispatch = useDispatch();
-  const [formSubmit, setFormSubmit] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
   const { status, errorMessage } = useSelector((state) => state.auth);
   const isCheckingAuthentication = useMemo(
     () => status === "checking",
@@ -43,17 +45,19 @@ export const RegisterPage = () => {
     email,
     password,
     onInputChange,
+    isFormValid,
     displayNameValid,
     emailValid,
     passwordValid,
-    isFormValid,
   } = useForm(formData, formValidations);
 
   const onSubmit = (event) => {
     event.preventDefault();
-    setFormSubmit(true);
+    setFormSubmitted(true);
+
     if (!isFormValid) return;
-    dispatch(startCreatingWithEmailPassword(formState));
+
+    dispatch(startCreatingUserWithEmailPassword(formState));
   };
 
   return (
@@ -67,12 +71,12 @@ export const RegisterPage = () => {
             <TextField
               label="Nombre completo"
               type="text"
-              placeholder="John Wick"
+              placeholder="Nombre completo"
               fullWidth
               name="displayName"
               value={displayName}
               onChange={onInputChange}
-              error={!!displayNameValid && formSubmit}
+              error={!!displayNameValid && formSubmitted}
               helperText={displayNameValid}
             />
           </Grid>
@@ -81,12 +85,12 @@ export const RegisterPage = () => {
             <TextField
               label="Correo"
               type="email"
-              placeholder="correo@gmailcom"
+              placeholder="correo@google.com"
               fullWidth
               name="email"
               value={email}
               onChange={onInputChange}
-              error={!!emailValid && formSubmit}
+              error={!!emailValid && formSubmitted}
               helperText={emailValid}
             />
           </Grid>
@@ -100,10 +104,11 @@ export const RegisterPage = () => {
               name="password"
               value={password}
               onChange={onInputChange}
-              error={!!passwordValid && formSubmit}
+              error={!!passwordValid && formSubmitted}
               helperText={passwordValid}
             />
           </Grid>
+
           <Grid container spacing={2} sx={{ mb: 2, mt: 1 }}>
             <Grid item xs={12} display={!!errorMessage ? "" : "none"}>
               <Alert severity="error">{errorMessage}</Alert>
@@ -116,15 +121,15 @@ export const RegisterPage = () => {
                 variant="contained"
                 fullWidth
               >
-                Conectarse
+                Crear cuenta
               </Button>
             </Grid>
           </Grid>
 
           <Grid container direction="row" justifyContent="end">
-            <Typography sx={{ mr: 1 }}>¿Ya estas registrado?</Typography>
+            <Typography sx={{ mr: 1 }}>¿Ya tienes cuenta?</Typography>
             <Link component={RouterLink} color="inherit" to="/auth/login">
-              Conectarme
+              ingresar
             </Link>
           </Grid>
         </Grid>
